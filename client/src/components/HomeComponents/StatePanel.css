@@ -1,0 +1,78 @@
+/* SECTION */
+.state-filters-section {
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* TITLE */
+.state-filters-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+}
+
+/* CONTAINER */
+.state-filters {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto 30px;
+}
+
+/* STATE CHIP */
+.state-chip {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 30px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  font-family: 'Inter', sans-serif;
+
+  /* subtle shadow */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* HOVER EFFECT 🔥 */
+.state-chip:hover {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* ACTIVE CLICK */
+.state-chip:active {
+  transform: scale(0.96);
+}
+
+/* VIEW MORE BUTTON */
+.view-more-btn {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: #111;
+  padding: 10px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* VIEW MORE HOVER */
+.view-more-btn:hover {
+  background: #333;
+  transform: translateY(-2px);
+}

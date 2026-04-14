@@ -1,0 +1,19 @@
+/* GLOBAL scrollbar hide */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;              /* Chrome / Safari / Edge */
+}
