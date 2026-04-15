@@ -5,8 +5,12 @@ const { connectDB } = require('./config/db');
 
 const app = express();
 
-app.use(cors({ origin: 'https://gen-ai-project-n545.vercel.app/' }));
-app.use(express.json());
+app.use(
+  cors({
+    origin: "https://gen-ai-project-n545.vercel.app",
+    credentials: true,
+  })
+);app.use(express.json());
 
 // Routes (added per phase)
 app.use('/api/sites', require('./routes/siteRoutes'));
