@@ -59,8 +59,10 @@ exports.registerUser = async (req, res) => {
 /* LOGIN */
 
 exports.loginUser = async (req, res) => {
+  console.log("LOGIN ROUTE HIT");
 
   try {
+
 
     const { email, password } = req.body;
 
