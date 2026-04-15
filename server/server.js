@@ -5,13 +5,15 @@ const { connectDB } = require('./config/db');
 
 const app = express();
 
+
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://gen-ai-project-n545.vercel.app",
+      "https://gen-ai-project-n545.vercel.app"
     ],
-    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
   })
 );
 app.use(express.json());
