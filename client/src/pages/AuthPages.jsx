@@ -27,7 +27,7 @@ export function LoginPage() {
       setLoading(true);
 
       const res = await fetch(
-        "https://gen-ai-project-n545.vercel.app/api/auth/login",
+        "https://genai-project-65m3.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -174,7 +174,7 @@ export function RegisterPage() {
       setLoading(true);
 
       const res = await fetch(
-        "https://gen-ai-project-n545.vercel.app//api/auth/register",
+        "https://genai-project-65m3.onrender.com/api/auth/register",
         {
           method: "POST",
           headers: {
