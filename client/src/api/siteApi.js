@@ -1,4 +1,5 @@
-import axios from 'axios';
+import api from "./baseApi.js";
+
 
 const API = "https://genai-project-65m3.onrender.com";
 const BASE = `${API}/api/sites`;
