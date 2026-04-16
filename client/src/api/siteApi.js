@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const BASE = '/api/sites';
+const API = "https://genai-project-65m3.onrender.com";
+const BASE = `${API}/api/sites`;
+
 
 export const searchSites = (q) =>
   axios.get(`${BASE}/search`, { params: { q } }).then(r => r.data);
