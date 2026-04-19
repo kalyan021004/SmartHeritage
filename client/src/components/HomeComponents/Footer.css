@@ -1,8 +1,12 @@
+/* ===== FOOTER CONTAINER ===== */
+
 .footer {
   background: #fafaf9;
   border-top: 1px solid #e5e5e5;
   padding: 80px 80px 40px;
 }
+
+/* ===== GRID LAYOUT ===== */
 
 .footer-grid {
   display: grid;
@@ -11,6 +15,8 @@
   max-width: 1400px;
   margin: 0 auto;
 }
+
+/* ===== TITLES ===== */
 
 .footer-section-title {
   font-size: 11px;
@@ -21,12 +27,16 @@
   text-transform: uppercase;
 }
 
+/* ===== TEXT ===== */
+
 .footer-text {
   font-size: 15px;
   color: #666;
   line-height: 1.8;
   margin-bottom: 16px;
 }
+
+/* ===== LINKS ===== */
 
 .footer-link {
   display: block;
@@ -41,10 +51,13 @@
   color: #b8945f;
 }
 
+/* ===== SOCIAL ICONS ===== */
+
 .social-icons {
   display: flex;
   gap: 20px;
   font-size: 24px;
+  align-items: flex-start;
 }
 
 .social-icon {
@@ -55,4 +68,85 @@
 
 .social-icon:hover {
   color: #b8945f;
+}
+
+/* ================================================= */
+/* ================= TABLET ========================= */
+/* ================================================= */
+
+@media (max-width: 1024px) {
+
+  .footer {
+    padding: 60px 40px 30px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .social-icons {
+    grid-column: span 2;
+    justify-content: flex-start;
+  }
+
+}
+
+/* ================================================= */
+/* ================= MOBILE ========================= */
+/* ================================================= */
+
+@media (max-width: 768px) {
+
+  .footer {
+    padding: 50px 20px 25px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footer-section-title {
+    font-size: 12px;
+  }
+
+  .footer-text {
+    font-size: 14px;
+  }
+
+  .footer-link {
+    font-size: 14px;
+  }
+
+  .social-icons {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+}
+
+/* ================================================= */
+/* ============== SMALL MOBILE ====================== */
+/* ================================================= */
+
+@media (max-width: 480px) {
+
+  .footer {
+    padding: 40px 16px 20px;
+  }
+
+  .footer-text {
+    font-size: 13px;
+  }
+
+  .footer-link {
+    font-size: 13px;
+  }
+
+  .social-icons {
+    font-size: 20px;
+    gap: 16px;
+  }
+
 }

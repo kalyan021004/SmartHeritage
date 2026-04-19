@@ -1,11 +1,17 @@
+/* ========================= */
 /* SECTION */
+/* ========================= */
+
 .state-filters-section {
   background: linear-gradient(to bottom, #ffffff, #fafafa);
   padding: 80px 20px;
   text-align: center;
 }
 
+/* ========================= */
 /* TITLE */
+/* ========================= */
+
 .state-filters-title {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 40px;
@@ -13,19 +19,26 @@
   color: #111;
   margin-bottom: 40px;
   letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
+/* ========================= */
 /* CONTAINER */
+/* ========================= */
+
 .state-filters {
   display: flex;
   gap: 18px;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto 30px;
 }
 
+/* ========================= */
 /* STATE CHIP */
+/* ========================= */
+
 .state-chip {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -39,11 +52,11 @@
   transition: all 0.25s ease;
   font-family: 'Inter', sans-serif;
 
-  /* subtle shadow */
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-/* HOVER EFFECT 🔥 */
+/* HOVER */
+
 .state-chip:hover {
   background: #111;
   color: #fff;
@@ -52,27 +65,110 @@
   box-shadow: 0 6px 14px rgba(0,0,0,0.15);
 }
 
-/* ACTIVE CLICK */
+/* ACTIVE */
+
 .state-chip:active {
   transform: scale(0.96);
 }
 
+/* ========================= */
 /* VIEW MORE BUTTON */
+/* ========================= */
+
 .view-more-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
   margin-top: 10px;
   font-size: 15px;
   font-weight: 600;
   color: #fff;
   background: #111;
-  padding: 10px 24px;
+  padding: 12px 26px;
   border-radius: 25px;
   text-decoration: none;
+
   transition: all 0.3s ease;
 }
 
-/* VIEW MORE HOVER */
 .view-more-btn:hover {
   background: #333;
   transform: translateY(-2px);
+}
+
+/* ========================= */
+/* TABLET */
+/* ========================= */
+
+@media (max-width: 1024px) {
+
+  .state-filters-section {
+    padding: 70px 30px;
+  }
+
+  .state-filters-title {
+    font-size: 34px;
+  }
+
+  .state-chip {
+    padding: 11px 24px;
+    font-size: 14px;
+  }
+
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+  .state-filters-section {
+    padding: 60px 20px;
+  }
+
+  .state-filters-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .state-filters {
+    gap: 12px;
+  }
+
+  .state-chip {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .view-more-btn {
+    width: 100%;
+    max-width: 260px;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+}
+
+/* ========================= */
+/* SMALL MOBILE */
+/* ========================= */
+
+@media (max-width: 480px) {
+
+  .state-filters-section {
+    padding: 50px 16px;
+  }
+
+  .state-filters-title {
+    font-size: 24px;
+  }
+
+  .state-chip {
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+
 }
