@@ -7,7 +7,6 @@ async function deleteStateSites() {
   try {
 
     await mongoose.connect(
-      "mongodb+srv://venkat02kalyan_db_user:1sRMLEPs1VLWZfEX@cluster0.7ad5ldb.mongodb.net/?appName=Cluster0"
     );
 
     const stateName = "Telangana"; // change state here

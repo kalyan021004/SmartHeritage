@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Site = require("../models/Site");
 
 const MONGO_URI =
-  "mongodb+srv://venkat02kalyan_db_user:1sRMLEPs1VLWZfEX@cluster0.7ad5ldb.mongodb.net/?appName=Cluster0";
 
 /* ALL NEW TOUR LINKS */
 
