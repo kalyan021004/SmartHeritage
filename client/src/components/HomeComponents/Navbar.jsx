@@ -126,7 +126,7 @@ export default function Navbar() {
       {/* LEFT: LOGO */}
 
       <a href="/" className="logo">
-        LivinAge
+        SmartHeritage
       </a>
 
       {/* CENTER: NAV LINKS */}

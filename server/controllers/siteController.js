@@ -33,16 +33,41 @@ Use "approximately" when uncertain. Fill every field.`;
 const searchSites = async (req, res) => {
   try {
     const q = req.query.q?.trim();
-    if (!q) return res.json({ results: [], found_in_db: false });
 
-    const results = await Site.find(
-      { $text: { $search: q } },
-      { score: { $meta: 'textScore' }, name: 1, slug: 1, location: 1, category: 1, conservation_status: 1 }
-    ).sort({ score: { $meta: 'textScore' } }).limit(10);
+    if (!q) {
+      return res.json({
+        found_in_db: false,
+        site: null
+      });
+    }
 
-    res.json({ results, found_in_db: results.length > 0 });
+    /* CREATE SLUG */
+
+    const slug = q
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+
+    /* CHECK IF SITE EXISTS */
+
+    const site = await Site.findOne(
+      { slug },
+      {
+        name: 1,
+        slug: 1,
+        location: 1,
+        category: 1
+      }
+    );
+
+    return res.json({
+      found_in_db: !!site,
+      site
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message
+    });
   }
 };
 
@@ -83,11 +108,12 @@ const generateSite = async (req, res) => {
 
     const slug = place_name
       .toLowerCase()
+      .trim()
       .replace(/\s+/g, "-");
 
     console.log("Slug:", slug);
 
-    /* FIRST CHECK — RETURN EXISTING */
+    /* CHECK EXISTING */
 
     let existing = await Site.findOne({ slug });
 
@@ -112,7 +138,7 @@ const generateSite = async (req, res) => {
 
       siteData = JSON.parse(cleaned);
 
-    } catch (err) {
+    } catch {
       return res.status(500).json({
         error: "AI returned invalid JSON"
       });
@@ -123,21 +149,41 @@ const generateSite = async (req, res) => {
     siteData.name = place_name;
     siteData.slug = slug;
 
-    /* FIX virtual_tour_links FORMAT */
+    /* FORCE VALID ENUM */
+
+    siteData.data_source = "ai_generated";
+
+    /* SAFE virtual_tour_links FORMAT */
 
     if (!Array.isArray(siteData.virtual_tour_links)) {
-      if (typeof siteData.virtual_tour_links === "string") {
-        siteData.virtual_tour_links = [
-          {
-            url: siteData.virtual_tour_links,
-            type: "maps",
-            label: "Virtual Tour"
-          }
-        ];
-      } else {
-        siteData.virtual_tour_links = [];
-      }
+      siteData.virtual_tour_links = [];
     }
+
+    siteData.virtual_tour_links =
+      siteData.virtual_tour_links
+        .filter(Boolean)
+        .map(link => {
+          if (typeof link === "string") {
+            return {
+              url: link,
+              type: "external",
+              label: "Virtual Tour"
+            };
+          }
+
+          return {
+            url: link.url || "",
+            type: link.type || "external",
+            label: link.label || "Virtual Tour"
+          };
+        });
+
+    /* REMOVE INVALID URL */
+
+    siteData.virtual_tour_links =
+      siteData.virtual_tour_links.filter(
+        l => l.url && l.url.startsWith("http")
+      );
 
     /* GENERATE IMAGES */
 
@@ -161,11 +207,7 @@ const generateSite = async (req, res) => {
 
   } catch (err) {
 
-    /* SECOND SAFETY — HANDLE DUPLICATE */
-
     if (err.code === 11000) {
-
-      console.log("Duplicate detected — returning existing");
 
       const slug =
         req.body.place_name
@@ -183,7 +225,6 @@ const generateSite = async (req, res) => {
     res.status(500).json({
       error: err.message
     });
-
   }
 };
 const getSiteSection = async (req, res) => {

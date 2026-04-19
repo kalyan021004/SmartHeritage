@@ -18,7 +18,7 @@ export default function HeroSection() {
   }
 };
 
-  const SUGGESTIONS = ['Brihadeeswarar Temple', 'Hampi', 'Ajanta Caves', 'Red Fort', 'Konark Sun Temple'];
+  const SUGGESTIONS = ['Brihadeeswarar Temple',  'Ajanta Caves', 'Red Fort'];
 
 
   return (

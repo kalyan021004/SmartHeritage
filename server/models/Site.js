@@ -2,8 +2,42 @@ const mongoose = require('mongoose');
 
 const TourLinkSchema = new mongoose.Schema({
   url: { type: String },
-  type: { type: String, enum: ['maps', 'arts', 'youtube', 'unknown'] },
+
+  type: {
+    type: String,
+    enum: [
+      'maps',
+      'arts',
+      'youtube',
+      'external',
+      'unknown'
+    ],
+    default: 'unknown'
+  },
+
   label: { type: String },
+
+  /* NEW BOOLEAN */
+
+  isIframe: {
+    type: Boolean,
+    default: true
+  }
+
+});
+TourLinkSchema.pre("save", function (next) {
+
+  if (
+    this.url &&
+    this.url.startsWith(
+      "https://www.tamilnadutourism.tn.gov.in"
+    )
+  ) {
+    this.isIframe = false;
+  }
+
+  next();
+
 });
 
 const HotspotSchema = new mongoose.Schema({
