@@ -215,14 +215,7 @@ export default function ChatInterface({ site }) {
             English
           </option>
 
-          <option value="hi">
-            Hindi
-          </option>
-
-          <option value="te">
-            Telugu
-          </option>
-        </select>
+          
       </div>
 
       {/* Suggestions */}
