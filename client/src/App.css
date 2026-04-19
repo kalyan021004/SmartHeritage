@@ -1,19 +1,22 @@
-/* GLOBAL scrollbar hide */
-
-* {
-  box-sizing: border-box;
-}
+/* Make full height */
 
 html,
-body {
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  scrollbar-width: none;      /* Firefox */
-  -ms-overflow-style: none;   /* IE */
+body,
+#root {
+  height: 100%;
+  margin: 0;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;              /* Chrome / Safari / Edge */
+/* App layout */
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* This pushes footer down */
+
+.main-content {
+  flex: 1;
 }
