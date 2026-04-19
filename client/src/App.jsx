@@ -51,6 +51,7 @@ export default function App() {
         <Route path="/blogs/new" element={<ProtectedRoute><NewBlogPage /></ProtectedRoute>} />
         <Route path="/blogs/:id" element={<ProtectedRoute><BlogDetailPage /></ProtectedRoute>} />
 
+
       </Routes>
 
       <Footer />

@@ -137,9 +137,7 @@ export default function Navbar() {
           Explore By States
         </a>
 
-        <a href="#" className="nav-link">
-          Tours
-        </a>
+        
 
         <a href="/blogs" className="nav-link">
           Blog
@@ -175,15 +173,10 @@ export default function Navbar() {
 
               <div className="dropdown">
 
-                <a href="/profile">
-                  My Profile
-                </a>
-
+                
                 
 
-                <a href="/settings">
-                  Settings
-                </a>
+               
 
                 <button onClick={handleLogout}>
                   Log out
@@ -247,15 +240,7 @@ export default function Navbar() {
           Explore By States
         </a>
 
-        <a
-          href="#"
-          className="mobile-link"
-          onClick={() =>
-            setMenuOpen(false)
-          }
-        >
-          Tours
-        </a>
+        
 
         <a
           href="/blogs"
