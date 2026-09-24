@@ -1,0 +1,22 @@
+/* Make full height */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+/* App layout */
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* This pushes footer down */
+
+.main-content {
+  flex: 1;
+}

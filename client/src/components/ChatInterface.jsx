@@ -1,0 +1,462 @@
+import { useState, useRef, useEffect } from "react";
+import { sendChatMessage } from "../api/chatApi";
+import { speakText, stopSpeech } from "../utils/speech";
+
+const SUGGESTIONS = [
+  "Tell me the history as a story",
+  "What should I not miss when visiting?",
+  "Explain the architecture simply",
+  "What myths are tied to this place?",
+];
+
+export default function ChatInterface({ site }) {
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      content: `Namaste! I am your AI guide for ${site.name}. Ask me anything about its history, architecture, myths, or plan your visit.`,
+    },
+  ]);
+
+  const [input, setInput] = useState("");
+  const [streaming, setStreaming] = useState(false);
+  const [narrationEnabled, setNarrationEnabled] = useState(true);
+  const [language, setLanguage] = useState("en");
+
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
+
+  // Fix voice loading issue in Chrome
+  useEffect(() => {
+    speechSynthesis.onvoiceschanged = () => {
+      speechSynthesis.getVoices();
+    };
+  }, []);
+
+ 
+const send = async (text) => {
+  if (!text.trim() || streaming) return;
+
+  const newMessages = [
+    ...messages,
+    { role: "user", content: text },
+  ];
+
+  setMessages(newMessages);
+  setInput("");
+  setStreaming(true);
+
+  try {
+    const res = await sendChatMessage(
+      newMessages,
+      {
+        name: site.name,
+        dynasty_or_period: site.dynasty_or_period,
+        architectural_style: site.architectural_style,
+        historical_background: site.historical_background,
+        cultural_significance: site.cultural_significance,
+        legends_and_stories: site.legends_and_stories,
+        visitor_info: site.visitor_info,
+        language: language,
+      }
+    );
+
+    // Add empty assistant message
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "",
+      },
+    ]);
+
+    if (!res.body) {
+      const data = await res.json();
+
+      const responseText =
+        data.response ||
+        data.answer ||
+        data.message ||
+        "No response";
+
+      setMessages((prev) => {
+        const updated = [...prev];
+
+        updated[updated.length - 1] = {
+          role: "assistant",
+          content: responseText,
+        };
+
+        return updated;
+      });
+
+      if (narrationEnabled) {
+        speakText(responseText, language);
+      }
+
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    let assistantText = "";
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) break;
+
+      // Add incoming bytes to buffer
+      buffer += decoder.decode(value, { stream: true });
+
+      // Split complete SSE events
+      const events = buffer.split("\n\n");
+
+      // Keep incomplete event in buffer
+      buffer = events.pop() || "";
+
+      for (const event of events) {
+        const lines = event.split("\n");
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) {
+            continue;
+          }
+
+          const data = line.slice(6).trim();
+
+          // Stream finished
+          if (data === "[DONE]") {
+            console.log("Stream completed");
+
+            if (narrationEnabled && assistantText) {
+              speakText(assistantText, language);
+            }
+
+            continue;
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+
+            // YOUR NODE BACKEND SENDS "content"
+            const content = parsed.content;
+
+            if (content) {
+              assistantText += content;
+
+              setMessages((prev) => {
+                const updated = [...prev];
+
+                updated[updated.length - 1] = {
+                  role: "assistant",
+                  content: assistantText,
+                };
+
+                return updated;
+              });
+            }
+
+            // Handle backend error
+            if (parsed.error) {
+              console.error("Backend error:", parsed.error);
+
+              setMessages((prev) => {
+                const updated = [...prev];
+
+                updated[updated.length - 1] = {
+                  role: "assistant",
+                  content: `⚠️ ${parsed.error}`,
+                };
+
+                return updated;
+              });
+            }
+
+          } catch (error) {
+            console.error(
+              "Failed to parse SSE data:",
+              data,
+              error
+            );
+          }
+        }
+      }
+    }
+
+  } catch (err) {
+    console.error("Chat error:", err);
+
+    setMessages((prev) => {
+      const updated = [...prev];
+
+      updated[updated.length - 1] = {
+        role: "assistant",
+        content: "⚠️ Error generating response",
+      };
+
+      return updated;
+    });
+
+  } finally {
+    setStreaming(false);
+  }
+};
+
+
+
+  return (
+    <div>
+
+      {/* Language Selector */}
+      <div style={{ marginBottom: "10px" }}>
+        <label style={{ marginRight: "10px" }}>
+          🌐 Language:
+        </label>
+
+        <select
+          value={language}
+          onChange={(e) =>
+            setLanguage(
+              e.target.value
+            )
+          }
+          style={{
+            padding: "6px 10px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+          }}
+        >
+          <option value="en">
+            English
+          </option>
+
+          <option value="hi">
+             Hindi(Not Avaliable)
+          </option>
+
+          <option value="te">
+            Telugu(Not Avaliable)
+          </option>
+        </select>
+      </div>
+
+      {/* Suggestions */}
+      {messages.length <= 1 && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+            marginBottom: "16px",
+          }}
+        >
+          {SUGGESTIONS.map(
+            (s) => (
+              <button
+                key={s}
+                onClick={() =>
+                  send(s)
+                }
+                style={{
+                  fontSize: "12px",
+                  padding:
+                    "6px 12px",
+                  border:
+                    "1px solid #d1d5db",
+                  borderRadius:
+                    "20px",
+                  background:
+                    "#fff",
+                  color:
+                    "#374151",
+                  cursor:
+                    "pointer",
+                }}
+              >
+                {s}
+              </button>
+            )
+          )}
+        </div>
+      )}
+
+      {/* Messages */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection:
+            "column",
+          gap: "12px",
+          maxHeight:
+            "400px",
+          overflowY:
+            "auto",
+          marginBottom:
+            "16px",
+          paddingRight:
+            "4px",
+        }}
+      >
+        {messages.map(
+          (m, i) => (
+            <div
+              key={i}
+              style={{
+                display:
+                  "flex",
+                justifyContent:
+                  m.role ===
+                    "user"
+                    ? "flex-end"
+                    : "flex-start",
+              }}
+            >
+              <div
+                style={{
+                  maxWidth:
+                    "78%",
+                  padding:
+                    "10px 14px",
+                  fontSize:
+                    "14px",
+                  lineHeight:
+                    "1.65",
+                  borderRadius:
+                    m.role ===
+                      "user"
+                      ? "18px 18px 4px 18px"
+                      : "18px 18px 18px 4px",
+                  background:
+                    m.role ===
+                      "user"
+                      ? "#2563eb"
+                      : "#f3f4f6",
+                  color:
+                    m.role ===
+                      "user"
+                      ? "#fff"
+                      : "#111",
+                }}
+              >
+                {m.content
+                  ? m.content
+                  : streaming &&
+                    m.role ===
+                    "assistant"
+                    ? "▋"
+                    : ""}
+              </div>
+            </div>
+          )
+        )}
+
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Controls */}
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+          marginBottom: "10px",
+        }}
+      >
+        <button
+          onClick={() =>
+            setNarrationEnabled(
+              !narrationEnabled
+            )
+          }
+        >
+          {narrationEnabled
+            ? "🔊 Narration ON"
+            : "🔇 Narration OFF"}
+        </button>
+
+        <button
+          onClick={stopSpeech}
+        >
+          Stop
+        </button>
+      </div>
+
+      {/* Input */}
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+        }}
+      >
+        <input
+          value={input}
+          onChange={(e) =>
+            setInput(
+              e.target.value
+            )
+          }
+          onKeyDown={(e) =>
+            e.key ===
+            "Enter" &&
+            send(input)
+          }
+          placeholder="Ask about history, myths, architecture..."
+          disabled={
+            streaming
+          }
+          style={{
+            flex: 1,
+            padding:
+              "10px 14px",
+            fontSize:
+              "14px",
+            border:
+              "1px solid #d1d5db",
+            borderRadius:
+              "10px",
+            outline:
+              "none",
+          }}
+        />
+
+        <button
+          onClick={() =>
+            send(input)
+          }
+          disabled={
+            streaming ||
+            !input.trim()
+          }
+          style={{
+            padding:
+              "10px 20px",
+            background:
+              "#2563eb",
+            color: "#fff",
+            border: "none",
+            borderRadius:
+              "10px",
+            fontSize:
+              "14px",
+            fontWeight: 500,
+            opacity:
+              streaming ||
+                !input.trim()
+                ? 0.5
+                : 1,
+          }}
+        >
+          {streaming
+            ? "▋"
+            : "Send"}
+        </button>
+      </div>
+    </div>
+  );
+}

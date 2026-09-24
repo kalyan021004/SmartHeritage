@@ -1,0 +1,9 @@
+langgraph
+typing
+langchain
+langchain_core
+langchain-groq
+langsmith
+fastapi
+python-dotenv
+uvicorn

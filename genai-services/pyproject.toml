@@ -1,0 +1,17 @@
+[project]
+name = "genai-services"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.141.1",
+    "langchain>=1.4.2",
+    "langchain-core>=1.6.4",
+    "langchain-groq>=1.1.3",
+    "langgraph>=1.2.12",
+    "langsmith>=0.14.0",
+    "python-dotenv>=1.2.3",
+    "typing>=3.10.0.0",
+    "uvicorn>=0.53.0",
+]
